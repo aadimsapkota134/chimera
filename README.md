@@ -88,7 +88,7 @@ Each of these is a *subgoal*. The agent updates its current subgoal every step b
 
 ```
 chimera/
-├── chimera/
+├── ashri/
 │   ├── __init__.py        # package entry point
 │   ├── actions.py         # Action and Direction enums, movement deltas
 │   ├── world.py           # GridWorld simulator + Observation + StepResult
@@ -123,7 +123,7 @@ chimera/
 
 ```bash
 git clone https://github.com/aadimsapkota134/chimera.git
-cd chimera
+cd ashri
 ```
 
 ---
