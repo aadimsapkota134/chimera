@@ -123,7 +123,7 @@ chimera/
 
 ```bash
 git clone https://github.com/aadimsapkota134/chimera.git
-cd ashri
+cd chimera
 ```
 
 ---
@@ -160,10 +160,10 @@ This only installs `pytest` for now. There are no ML dependencies at this stage 
 
 ### Step 4 — Run the agent
 
-All run commands are executed from inside the `ashri/` directory (the one that contains `levels/`):
+All run commands are executed from inside the `chimera/` directory (the one that contains `levels/`):
 
 ```bash
-cd ashri
+cd chimera
 ```
 
 **Run on level 1, stepping through at 0.2s per step:**
@@ -211,7 +211,7 @@ The arrow (`>`, `^`, `v`, `<`) shows the agent's current facing direction.
 
 ### Step 5 — Run the tests
 
-From inside the `ashri/` directory:
+From inside the `chimera/` directory:
 
 ```bash
 pytest
