@@ -160,25 +160,25 @@ This only installs `pytest` for now. There are no ML dependencies at this stage 
 
 ### Step 4 — Run the agent
 
-All run commands are executed from inside the `chimera/` directory (the one that contains `levels/`):
+All run commands are executed from inside the `ashri/` directory (the one that contains `levels/`):
 
 ```bash
-cd chimera
+cd ashri
 ```
 
 **Run on level 1, stepping through at 0.2s per step:**
 ```bash
-python -m chimera.run levels/level_01.txt --delay 0.2
+python -m ashri.run levels/level_01.txt --delay 0.2
 ```
 
 **Run on level 2 silently (no step-by-step output):**
 ```bash
-python -m chimera.run levels/level_02.txt --quiet
+python -m ashri.run levels/level_02.txt --quiet
 ```
 
 **Run on level 3 with a short delay:**
 ```bash
-python -m chimera.run levels/level_03.txt --delay 0.1
+python -m ashri.run levels/level_03.txt --delay 0.1
 ```
 
 Each step prints the current subgoal, the action taken, any event that happened (e.g. `picked up key`, `opened door`, `blocked`), and a fresh render of the grid.
@@ -211,7 +211,7 @@ The arrow (`>`, `^`, `v`, `<`) shows the agent's current facing direction.
 
 ### Step 5 — Run the tests
 
-From inside the `chimera/` directory:
+From inside the `ashri/` directory:
 
 ```bash
 pytest
