@@ -105,9 +105,8 @@ ashri/
 ├── tests/
 │   ├── test_world.py      # unit tests for the simulator mechanics
 │   └── test_agent.py      # parametrised test: agent must solve every level file
-├── docs/
-│   └── ROADMAP.md         # internal notes on what each version adds
-├── fix_level.py           # utility: pads uneven level rows to the same width
+│   
+├── .gitignore
 ├── requirements.txt
 └── README.md
 ```
@@ -250,14 +249,14 @@ Drop a new file named `level_05.txt` (or any `level_*.txt`) into `levels/` using
 
 The test suite picks up every `level_*.txt` file automatically. Running `pytest` after adding a level tells you immediately whether the agent can solve it.
 
-**If your rows are uneven**, use the `fix_level.py` utility in the project root:
+**If your rows are uneven**, use the `fix_level.py` utility. It lives one directory above the repo root (in `project_ashrika/`), not inside the repo itself:
 
 ```python
 # edit this line inside fix_level.py first:
 path = Path("ashri/levels/level_05.txt")
 ```
 
-Then run it from the project root:
+Then run it from the `project_ashrika/` directory (the parent of the repo):
 
 ```bash
 python fix_level.py
