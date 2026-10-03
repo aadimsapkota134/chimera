@@ -8,9 +8,9 @@
 
 ## What is this?
 
-I'm building an autonomous agent that lives inside a small 2D grid world. The world has walls, keys, doors, and a charging station. The agent's job is simple: **find the key, open the door, and reach the charger**.
+I'm building an autonomous agent that lives inside a small 2D grid world. The world has walls, keys, doors, and a charging station. The agent's job is: find the key, open the door, and reach the charger.
 
-What makes this interesting is *how* the system does it. Right now it uses hand-written rules and a pathfinding algorithm. But the long-term goal is to layer in vision, language understanding, agentic planning, memory, and eventually an evolutionary training loop — piece by piece, without throwing away the work from any previous step.
+What makes this interesting is *how* the system does it. Right now it uses hand-written rules and a BFS pathfinding algorithm. But the long-term goal is to layer in vision, language understanding, agentic planning, memory, and eventually an evolutionary training loop — piece by piece, without throwing away the work from any previous step.
 
 The inspiration comes from neuroevolution research — the idea that a controller can improve through selection and mutation, not just gradient descent. Instead of a self-driving car, I wanted something more general: a little explorer in a game-like world that needs to reason, navigate, and adapt.
 
@@ -18,9 +18,7 @@ The inspiration comes from neuroevolution research — the idea that a controlle
 
 ## What's implemented right now
 
-This is the very first working piece. I built the full **observe → act → new observation** loop and proved it works reliably before adding any AI on top of it.
-
-Specifically, I did:
+This is the first working piece. I built the full **observe → act → new observation** loop and verified it works reliably before adding any AI on top of it.
 
 - A **grid world simulator** that handles walls, a key, a locked door, and a charging station
 - A **rule-based agent** that uses BFS pathfinding and a simple subgoal state machine
@@ -89,8 +87,8 @@ Each of these is a *subgoal*. The agent updates its current subgoal every step b
 ## Project structure
 
 ```
-ashri/
-├── ashri/
+chimera/
+├── chimera/
 │   ├── __init__.py        # package entry point
 │   ├── actions.py         # Action and Direction enums, movement deltas
 │   ├── world.py           # GridWorld simulator + Observation + StepResult
@@ -105,7 +103,6 @@ ashri/
 ├── tests/
 │   ├── test_world.py      # unit tests for the simulator mechanics
 │   └── test_agent.py      # parametrised test: agent must solve every level file
-│   
 ├── .gitignore
 ├── requirements.txt
 └── README.md
@@ -126,7 +123,7 @@ ashri/
 
 ```bash
 git clone https://github.com/aadimsapkota134/chimera.git
-cd ashri
+cd chimera
 ```
 
 ---
@@ -157,31 +154,31 @@ You should see `(.venv)` appear at the start of your terminal prompt once the en
 pip install -r requirements.txt
 ```
 
-This only installs `pytest` for now. There are no heavy ML dependencies at this stage — the system is pure Python.
+This only installs `pytest` for now. There are no ML dependencies at this stage — the system is pure Python.
 
 ---
 
 ### Step 4 — Run the agent
 
-All run commands are executed from inside the `ashri/` subdirectory (the one that contains `levels/`):
+All run commands are executed from inside the `chimera/` directory (the one that contains `levels/`):
 
 ```bash
-cd ashri
+cd chimera
 ```
 
-**Run on level 1 and watch it step by step (0.2 second delay between steps):**
+**Run on level 1, stepping through at 0.2s per step:**
 ```bash
-python -m ashri.run levels/level_01.txt --delay 0.2
+python -m chimera.run levels/level_01.txt --delay 0.2
 ```
 
 **Run on level 2 silently (no step-by-step output):**
 ```bash
-python -m ashri.run levels/level_02.txt --quiet
+python -m chimera.run levels/level_02.txt --quiet
 ```
 
 **Run on level 3 with a short delay:**
 ```bash
-python -m ashri.run levels/level_03.txt --delay 0.1
+python -m chimera.run levels/level_03.txt --delay 0.1
 ```
 
 Each step prints the current subgoal, the action taken, any event that happened (e.g. `picked up key`, `opened door`, `blocked`), and a fresh render of the grid.
@@ -214,7 +211,7 @@ The arrow (`>`, `^`, `v`, `<`) shows the agent's current facing direction.
 
 ### Step 5 — Run the tests
 
-From inside the `ashri/` directory:
+From inside the `chimera/` directory:
 
 ```bash
 pytest
@@ -242,27 +239,14 @@ Drop a new file named `level_05.txt` (or any `level_*.txt`) into `levels/` using
 ###########
 ```
 
-**Three hard rules:**
+Three hard rules:
 - Every row must be the **same width** — use `#` to pad rows that are too short
 - There must be exactly **one** each of `A`, `K`, `D`, and `C`
 - The key, door, and charger must all be reachable from the agent's starting position
 
 The test suite picks up every `level_*.txt` file automatically. Running `pytest` after adding a level tells you immediately whether the agent can solve it.
 
-**If your rows are uneven**, use the `fix_level.py` utility. It lives one directory above the repo root (in `project_ashrika/`), not inside the repo itself:
-
-```python
-# edit this line inside fix_level.py first:
-path = Path("ashri/levels/level_05.txt")
-```
-
-Then run it from the `project_ashrika/` directory (the parent of the repo):
-
-```bash
-python fix_level.py
-```
-
-It pads every row to the width of the longest row using `#`.
+If your rows are uneven, pad them manually to the width of the longest row using `#`.
 
 ---
 
@@ -270,14 +254,14 @@ It pads every row to the width of the longest row using `#`.
 
 Right now the system navigates entirely by fixed hand-written rules. It has no sense of vision, no understanding of language, and no ability to learn from experience.
 
-Upcoming updates will eventually bring things like:
+Planned additions, in rough order:
 
 - a **perception layer** where the system looks at a rendered image of the environment and identifies objects rather than reading raw tile symbols
 - **natural language instructions** — so you can tell the system *"find the key and open the door"* instead of hard-coding the goal
 - a proper **agentic planning loop** where the system breaks a high-level goal into subgoals and updates its plan as it observes the results of its actions
 - **short-term memory** so the system remembers what it found in a previous room and doesn't have to re-explore
 - a **vision-language action model** that takes a rendered image and a text instruction as input and outputs an action
-- an **evolutionary training component** that scores agents by task performance, keeps the better ones, mutates their parameters, and repeats — no gradient descent involved
+- an **evolutionary training component** that scores agents by task performance, keeps the better-performing ones, mutates their parameters, and repeats — no gradient descent involved
 
 The architecture is already designed to make these additions clean. The `Observation` dataclass is the single interface between the world and the agent, so plugging in a perception module later only changes what that object contains. The subgoal logic is already separated from movement, which makes replacing the planner straightforward.
 
@@ -285,13 +269,13 @@ The architecture is already designed to make these additions clean. The `Observa
 
 ## The bigger picture
 
-The long-term question this project is trying to answer is:
+The long-term question this project is trying to answer:
 
 > **Can a relatively small vision-language agent learn to adapt its actions to new environments, rather than memorising a particular layout?**
 
-This connects directly to the generalisation problem in reinforcement learning and neuroevolution. A model that only memorises training environments is useless in the real world. The evolutionary component will eventually let us test this properly: train on one set of procedurally generated levels, evaluate on completely unseen ones, and measure whether the system generalises.
+This connects directly to the generalisation problem in reinforcement learning and neuroevolution. A model that only memorises training environments fails on anything it hasn't seen before. The evolutionary component will eventually let us test this properly: train on one set of procedurally generated levels, evaluate on completely unseen ones, and measure whether the system generalises.
 
-For now, step one is done. The loop works. The agent is reliable. Everything else builds on top of this.
+Step one is done. The loop works. The agent is reliable. Everything else builds on top of this.
 
 ---
 
@@ -317,4 +301,3 @@ MIT — do whatever you want with it.
 ---
 
 *Built as a learning project to understand Vision-Language-Action systems, agentic AI, and neuroevolution from the ground up.*
-
